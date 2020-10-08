@@ -1,32 +1,27 @@
 import { Component, Prop, h } from '@stencil/core';
-import { format } from '../../utils/utils';
 
 @Component({
   tag: 'my-component',
-  styleUrl: 'my-component.css',
   shadow: true,
 })
 export class MyComponent {
-  /**
-   * The first name
-   */
-  @Prop() first: string;
+  @Prop({
+    reflect: true
+  }) value: string;
 
-  /**
-   * The middle name
-   */
-  @Prop() middle: string;
+  @Prop()
+  name!: "one" | "two" | "three";
 
-  /**
-   * The last name
-   */
-  @Prop() last: string;
+  connectedCallback() {
+    const attrFiltered = document.querySelectorAll(`my-component[value=${this.name}]`)
+    const propFiltered = Array.from(document.querySelectorAll('my-component')).filter(comp => comp.value === this.name);
 
-  private getText(): string {
-    return format(this.first, this.middle, this.last);
+    // first query fails on first page load
+    console.log(`querying w/ my-component[value=name]: ${attrFiltered.length}`);
+    console.log(`querying w/ my-component and filtering by name: ${propFiltered.length}`);
   }
 
   render() {
-    return <div>Hello, World! I'm {this.getText()}</div>;
+    return <div>😄</div>;
   }
 }
